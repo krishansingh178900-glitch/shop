@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKYLIX Administration | Haute Gallery &amp; Content Management</title>
+  
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#070709">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+  <!-- ==============================================================================
+       VIEW 1: SECURE LOGIN (UNAUTHENTICATED)
+       ============================================================================== -->
+  <div class="login-view-wrapper" id="loginView">
+    <div class="login-card">
+      <div class="login-header">
+        <a href="../index.html">
+          <img src="../assets/logo.svg" alt="SKYLIX Haute Coiffure Logo" class="login-logo">
+        </a>
+        <div class="login-badge">Administrator Access</div>
+        <h1 class="login-title">Salon Management Suite</h1>
+        <p class="login-subtitle">Authenticate to manage cloud gallery portfolio &amp; assets</p>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="loginErrorAlert" style="display: none; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 20px;"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Administrator Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="loginEmail" class="form-input" placeholder="admin@skylixsalon.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginSubmitBtn">
+          Sign In to Admin Portal
+        </button>
+      </form>
+
+      <div class="login-footer-actions">
+        <a href="../index.html" style="display: flex; align-items: center; gap: 6px;">
+          ← Return to Website
+        </a>
+        <button type="button" id="openConfigFromLoginBtn" style="color: var(--gold-light); display: flex; align-items: center; gap: 6px;">
+          ⚙ Supabase Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       VIEW 2: AUTHENTICATED ADMIN DASHBOARD
+       ============================================================================== -->
+  <div class="admin-app-wrapper" id="adminView" style="display: none;">
+    <!-- Top Navigation Bar -->
+    <header class="admin-navbar">
+      <div class="admin-nav-left">
+        <a href="../index.html">
+          <img src="../assets/logo.svg" alt="SKYLIX Logo" class="admin-nav-brand-img">
+        </a>
+        <span class="admin-nav-badge">Salon Management</span>
+      </div>
+
+      <div class="admin-nav-right">
+        <!-- Live Connection Status -->
+        <div class="status-indicator">
+          <span class="status-dot" id="connectionDot"></span>
+          <span id="connectionText">Supabase Connected</span>
+        </div>
+
+        <!-- View Live Site -->
+        <a href="../index.html" target="_blank" rel="noopener" class="btn-nav-action" title="Open Public Website in New Tab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          Live Website
+        </a>
+
+        <!-- Configuration Settings Modal Trigger -->
+        <button type="button" class="btn-nav-action" id="openConfigBtn" title="Supabase API &amp; Storage Configuration">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Supabase Setup
+        </button>
+
+        <!-- Admin Profile & Sign Out -->
+        <span id="adminUserEmail" style="font-size: 0.82rem; color: var(--gold-light); font-weight: 500;"></span>
+        <button type="button" class="btn-nav-action btn-logout" id="logoutBtn" title="Sign Out of Session">
+          Sign Out
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Setup Notice Banner (Visible if Supabase credentials need verification) -->
+      <div class="setup-notice-banner" id="setupBannerNotice">
+        <div class="setup-notice-content">
+          <h4>⚡ Supabase Integration Active / Configuration</h4>
+          <p>
+            Connect your Supabase Project URL and Public Anon Key to enable live cloud photo uploads and PostgreSQL storage synchronization.
+          </p>
+        </div>
+        <button type="button" class="btn-nav-action" onclick="document.getElementById('openConfigBtn').click()" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; white-space: nowrap;">
+          Open Setup Wizard
+        </button>
+      </div>
+
+      <!-- Statistics Grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div>
+            <div class="stat-card-title">Total Gallery Photos</div>
+            <div class="stat-card-value" id="statTotalPhotos">0</div>
+          </div>
+          <div class="stat-card-icon">📸</div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-card-title">Active Categories</div>
+            <div class="stat-card-value" id="statTotalCategories">0</div>
+          </div>
+          <div class="stat-card-icon">✂</div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-card-title">Cloud Storage</div>
+            <div class="stat-card-value" id="statStorageStatus" style="font-size: 1.8rem;">Live</div>
+          </div>
+          <div class="stat-card-icon">☁</div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-card-title">Quick Action</div>
+            <button type="button" class="btn-login" onclick="document.getElementById('photoTitle').focus()" style="padding: 10px 16px; font-size: 0.78rem; margin: 0; width: auto;">
+              + Upload Photo
+            </button>
+          </div>
+          <div class="stat-card-icon">⬆</div>
+        </div>
+      </section>
+
+      <!-- ==============================================================================
+           PHOTO UPLOAD PANEL
+           ============================================================================== -->
+      <section class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">
+            <span>✧</span> Upload New Salon Creation
+          </h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">
+            Accepts JPG, PNG, WebP (Max 10MB) • Uploads to Supabase Storage
+          </span>
+        </div>
+
+        <div class="upload-grid">
+          <!-- Dropzone -->
+          <div>
+            <div class="dropzone-container" id="dropzone">
+              <div class="dropzone-icon">☁</div>
+              <div class="dropzone-title">Drag &amp; drop salon photo here</div>
+              <div class="dropzone-subtitle">or click to browse from your device</div>
+              <input type="file" id="fileInput" class="dropzone-input" accept="image/jpeg,image/png,image/webp,image/jpg">
+
+              <!-- Selected Image Preview Container -->
+              <div class="image-preview-wrapper" id="previewContainer" style="display: none;">
+                <img id="previewImg" src="" alt="Selected Preview">
+                <button type="button" class="preview-remove-btn" id="removePreviewBtn" title="Remove selected image">✕</button>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">
+              <span id="previewFileName">No file selected</span>
+              <span id="previewFileSize"></span>
+            </div>
+
+            <!-- Upload Progress Bar -->
+            <div class="upload-progress-wrapper" id="uploadProgressWrapper">
+              <div class="progress-header">
+                <span id="uploadProgressText">Uploading to Supabase Storage...</span>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="uploadProgressBar"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadata Form -->
+          <form id="uploadPhotoForm">
+            <div class="form-group">
+              <label class="form-label" for="photoTitle">Photo Title *</label>
+              <input type="text" id="photoTitle" class="form-input" placeholder="e.g. Honey Caramel Balayage Waves" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="photoCategory">Portfolio Category *</label>
+              <select id="photoCategory" class="form-input" required>
+                <option value="Signature Cuts">Signature Cuts</option>
+                <option value="Color &amp; Balayage">Color &amp; Balayage</option>
+                <option value="Bridal &amp; Glamour">Bridal &amp; Glamour</option>
+                <option value="Men's Grooming">Men's Grooming</option>
+                <option value="Luxury Treatments">Luxury Treatments</option>
+                <option value="Salon Architecture">Salon Architecture</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="photoDesc">Description &amp; Formula Notes</label>
+              <textarea id="photoDesc" class="form-input" rows="3" placeholder="e.g. Freehand balayage glossed with level 9 warm honey toner and blow-dry curls."></textarea>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-primary); cursor: pointer;">
+                <input type="checkbox" id="photoFeatured" style="accent-color: var(--gold-primary); width: 16px; height: 16px;">
+                Mark as Featured in Hero Showcase
+              </label>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="photoOrder" style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Order:</label>
+                <input type="number" id="photoOrder" class="form-input" value="0" style="width: 70px; padding: 6px 10px;">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="uploadSubmitBtn">
+              Upload &amp; Publish Photo
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==============================================================================
+           GALLERY MANAGEMENT SECTION
+           ============================================================================== -->
+      <section class="admin-card">
+        <div class="admin-card-header">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <h2 class="admin-card-title">
+              <span>✧</span> Gallery Photos Portfolio
+            </h2>
+            <span class="admin-nav-badge" id="adminPhotoCountBadge">0 Photos</span>
+          </div>
+          <button type="button" class="btn-nav-action" onclick="window.refreshSkylixGallery ? window.refreshSkylixGallery() : null; document.location.reload();">
+            ⟳ Refresh
+          </button>
+        </div>
+
+        <!-- Controls Bar: Search & Category Filter -->
+        <div class="gallery-control-bar">
+          <input type="text" id="adminGallerySearch" class="gallery-search-input" placeholder="🔍 Search photos by title or details...">
+
+          <div class="admin-filter-pills">
+            <button class="admin-filter-pill active" data-admin-filter="All">All</button>
+            <button class="admin-filter-pill" data-admin-filter="Signature Cuts">Signature Cuts</button>
+            <button class="admin-filter-pill" data-admin-filter="Color &amp; Balayage">Color &amp; Balayage</button>
+            <button class="admin-filter-pill" data-admin-filter="Bridal &amp; Glamour">Bridal</button>
+            <button class="admin-filter-pill" data-admin-filter="Men's Grooming">Men's Grooming</button>
+            <button class="admin-filter-pill" data-admin-filter="Luxury Treatments">Treatments</button>
+          </div>
+        </div>
+
+        <!-- Photos Grid -->
+        <div class="admin-gallery-grid" id="adminGalleryGrid">
+          <!-- Populated dynamically via js/admin.js from Supabase -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==============================================================================
+       MODAL 1: DELETE CONFIRMATION
+       ============================================================================== -->
+  <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: #ef4444; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+        <span>⚠</span> Delete Photo Permanently?
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 14px;">
+        Are you sure you want to delete <strong id="deleteTargetTitle" style="color: #fff;">this photo</strong>?
+      </p>
+      <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; padding: 12px 16px; border-radius: 4px; font-size: 0.85rem; color: #fca5a5; margin-bottom: 24px;">
+        This action will permanently delete the photo record from the Supabase Database AND remove the uploaded image file from Supabase Storage.
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-nav-action" id="cancelDeleteBtn">Cancel</button>
+        <button type="button" class="btn-login" id="confirmDeleteBtn" style="background: #ef4444; color: #fff; width: auto; margin: 0; padding: 10px 22px;">
+          Yes, Delete Photo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       MODAL 2: SUPABASE CONFIGURATION ASSISTANT
+       ============================================================================== -->
+  <div class="modal-overlay" id="configModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <button class="modal-close-btn" id="closeConfigModalBtn" aria-label="Close dialog">✕</button>
+
+      <div style="margin-bottom: 24px;">
+        <div class="login-badge">Cloud Integration</div>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold-light); margin-bottom: 8px;">
+          Supabase Credentials &amp; Setup
+        </h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Configure your Supabase project credentials. Credentials are saved locally in browser storage and used for authentication, database records, and storage uploads.
+        </p>
+      </div>
+
+      <!-- Test Connection Result Banner -->
+      <div id="testConnResult" style="display: none; padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 20px;"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="configSupabaseUrl">Supabase Project URL</label>
+        <input type="url" id="configSupabaseUrl" class="form-input" placeholder="https://your-project-id.supabase.co">
+        <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px;">
+          Found in your Supabase Dashboard under Project Settings &gt; API &gt; Project URL.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="configSupabaseKey">Supabase Anon Public Key</label>
+        <input type="text" id="configSupabaseKey" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+        <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px;">
+          Use the <code>anon</code> public key. <strong>NEVER</strong> use the <code>service_role</code> secret key in browser code!
+        </span>
+      </div>
+
+      <!-- Step by step helper -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--admin-border-subtle); border-radius: 8px; padding: 16px; margin: 20px 0; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;">
+        <strong style="color: var(--gold-light); display: block; margin-bottom: 6px;">✦ Setup Steps in Supabase:</strong>
+        1. Open your Supabase SQL Editor and execute the script in <code style="color: #F5E08F;">supabase/schema.sql</code>.<br>
+        2. In <strong>Authentication &gt; Users</strong>, click <em>Add User &gt; Create User</em> to create your administrator email &amp; password.<br>
+        3. Click "Test Live Connection" below to verify everything is wired up!
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <button type="button" class="btn-nav-action" id="copySqlBtn" style="flex: 1; justify-content: center;">
+          📋 Copy schema.sql to Clipboard
+        </button>
+        <button type="button" class="btn-nav-action" id="testConnectionBtn" style="flex: 1; justify-content: center; color: var(--gold-light); border-color: var(--admin-border);">
+          ⚡ Test Live Connection
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-login" id="saveConfigBtn" style="width: 100%; margin: 0;">
+          Save Credentials &amp; Connect
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Supabase Official Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- SKYLIX Scripts -->
+  <script src="../js/config.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>
